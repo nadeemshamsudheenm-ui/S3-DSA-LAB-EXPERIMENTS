@@ -1,80 +1,82 @@
-/* Experiment 9: Back/forward navigation of visited web pages
+/* Experiment 9: Back and forward navigation of visited web pages
    using a doubly linked list */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-struct page {
+struct Node {
     char url[100];
-    struct page *prev, *next;
+    struct Node *prev;
+    struct Node *next;
 };
-struct page *current = NULL;
 
-/* Visit a new page: everything ahead of the current page is discarded */
-void visit(char url[]) {
-    struct page *p = (struct page *)malloc(sizeof(struct page));
-    struct page *t, *tmp;
-    strcpy(p->url, url);
-    p->prev = p->next = NULL;
+struct Node *current = NULL;
+
+void visitPage() {
+    struct Node *newnode, *temp, *del;
+    char url[100];
+
+    printf("Enter the URL: ");
+    scanf("%s", url);
+
+    newnode = (struct Node *)malloc(sizeof(struct Node));
+    strcpy(newnode->url, url);
+    newnode->prev = NULL;
+    newnode->next = NULL;
 
     if (current != NULL) {
-        t = current->next;
-        while (t) {                 /* clear forward history */
-            tmp = t;
-            t = t->next;
-            free(tmp);
+        temp = current->next;               /* clear forward history */
+        while (temp != NULL) {
+            del = temp;
+            temp = temp->next;
+            free(del);
         }
-        current->next = p;
-        p->prev = current;
+        current->next = newnode;            /* link new node after current */
+        newnode->prev = current;
     }
-    current = p;
-    printf("Visited: %s\n", current->url);
+    current = newnode;
+    printf("Visited page: %s\n", current->url);
 }
 
-void back() {
-    if (current == NULL || current->prev == NULL) {
-        printf("No previous page\n");
-        return;
+void goBack() {
+    if (current != NULL && current->prev != NULL) {
+        current = current->prev;
+        printf("Moved back to: %s\n", current->url);
     }
-    current = current->prev;
-    printf("Back to: %s\n", current->url);
+    else
+        printf("No previous page!\n");
 }
 
-void forward() {
-    if (current == NULL || current->next == NULL) {
-        printf("No next page\n");
-        return;
+void goForward() {
+    if (current != NULL && current->next != NULL) {
+        current = current->next;
+        printf("Moved forward to: %s\n", current->url);
     }
-    current = current->next;
-    printf("Forward to: %s\n", current->url);
+    else
+        printf("No forward page!\n");
 }
 
-void showHistory() {
-    struct page *t = current;
-    if (!current) { printf("No history\n"); return; }
-    while (t->prev) t = t->prev;    /* go to oldest page */
-    printf("History: ");
-    while (t) {
-        if (t == current) printf("[%s]", t->url);
-        else printf("%s", t->url);
-        if (t->next) printf(" <-> ");
-        t = t->next;
-    }
-    printf("\n");
+void showCurrent() {
+    if (current != NULL)
+        printf("Current page: %s\n", current->url);
+    else
+        printf("No page visited yet!\n");
 }
 
 int main() {
-    int ch;
-    char url[100];
+    int choice;
     do {
-        printf("\n1.Visit new page 2.Back 3.Forward 4.Show history 5.Exit\nChoice: ");
-        scanf("%d", &ch);
-        switch (ch) {
-        case 1: printf("Enter URL: "); scanf("%s", url); visit(url); break;
-        case 2: back(); break;
-        case 3: forward(); break;
-        case 4: showHistory(); break;
+        printf("\n1. Visit Page\n2. Back\n3. Forward\n4. Show Current Page\n5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+        case 1: visitPage(); break;
+        case 2: goBack(); break;
+        case 3: goForward(); break;
+        case 4: showCurrent(); break;
+        case 5: break;
+        default: printf("Invalid choice\n");
         }
-    } while (ch != 5);
+    } while (choice != 5);
     return 0;
 }
