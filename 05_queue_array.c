@@ -1,40 +1,70 @@
-/* Experiment 5: Linear queue using array */
+/* Experiment 5: Implementation of queue using an array */
 #include <stdio.h>
 #define MAX 5
 
-int q[MAX], front = -1, rear = -1;
+int q[MAX + 1];                 /* positions 1 to MAX are used */
+int front = 0, rear = 0;
 
-void enqueue(int x) {
-    if (rear == MAX - 1) { printf("Queue Overflow\n"); return; }
-    if (front == -1) front = 0;
-    q[++rear] = x;
-    printf("%d inserted\n", x);
+void create() {
+    char ch;
+    front = 1;
+    do {
+        if (rear == MAX) {
+            printf("Queue is full\n");
+            break;
+        }
+        rear++;
+        printf("Enter the element: ");
+        scanf("%d", &q[rear]);
+        printf("Do you want to continue (Y/N)? ");
+        scanf(" %c", &ch);
+    } while (ch != 'N' && ch != 'n');
 }
 
-void dequeue() {
-    if (front == -1 || front > rear) { printf("Queue Underflow\n"); return; }
-    printf("%d deleted\n", q[front++]);
-    if (front > rear) front = rear = -1;   /* queue became empty: reset */
-}
-
-void display() {
+void traverse() {
     int i;
-    if (front == -1) { printf("Queue is empty\n"); return; }
-    printf("Queue: ");
-    for (i = front; i <= rear; i++) printf("%d ", q[i]);
+    if (front > rear) {
+        printf("Queue is empty\n");
+        return;
+    }
+    printf("Queue elements: ");
+    for (i = front; i <= rear; i++)
+        printf("%d ", q[i]);
     printf("\n");
 }
 
+void insert() {
+    int m;
+    if (rear == MAX) {
+        printf("Queue is full\n");
+        return;
+    }
+    printf("Enter the element to insert: ");
+    scanf("%d", &m);
+    rear++;
+    q[rear] = m;
+}
+
+void delete() {
+    if (front > rear) {
+        printf("Queue is empty\n");
+        return;
+    }
+    printf("Deleted element: %d\n", q[front]);
+    q[front] = '\0';
+    front++;
+    if (front > rear) {         /* queue became empty: reset */
+        front = 1;
+        rear = 0;
+    }
+}
+
 int main() {
-    int ch, x;
-    do {
-        printf("\n1.Enqueue 2.Dequeue 3.Display 4.Exit\nChoice: ");
-        scanf("%d", &ch);
-        switch (ch) {
-        case 1: printf("Enter value: "); scanf("%d", &x); enqueue(x); break;
-        case 2: dequeue(); break;
-        case 3: display(); break;
-        }
-    } while (ch != 4);
+    create();
+    traverse();
+    insert();
+    traverse();
+    delete();
+    traverse();
     return 0;
 }
