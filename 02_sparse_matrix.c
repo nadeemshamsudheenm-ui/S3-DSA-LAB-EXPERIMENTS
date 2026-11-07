@@ -13,7 +13,10 @@ void readSparse(int s[][3], char name) {
         for (j = 0; j < c; j++) {
             scanf("%d", &v);
             if (v != 0) {
-                s[k][0] = i; s[k][1] = j; s[k][2] = v; k++;
+                s[k][0] = i;
+                s[k][1] = j;
+                s[k][2] = v; 
+                k++;
             }
         }
     s[0][0] = r; s[0][1] = c; s[0][2] = k - 1;
@@ -59,7 +62,11 @@ int add(int a[][3], int b[][3], int c[][3]) {
         pa = a[i][0] * a[0][1] + a[i][1];   /* linear position */
         pb = b[j][0] * b[0][1] + b[j][1];
         if (pa < pb) {
-            c[k][0] = a[i][0]; c[k][1] = a[i][1]; c[k][2] = a[i][2]; k++; i++;
+            c[k][0] = a[i][0];
+           c[k][1] = a[i][1];
+           c[k][2] = a[i][2];
+           k++;
+           i++;
         } else if (pa > pb) {
             c[k][0] = b[j][0]; c[k][1] = b[j][1]; c[k][2] = b[j][2]; k++; j++;
         } else {
