@@ -1,44 +1,68 @@
-/* Experiment 3: Stack using array */
+/* Experiment 3: Implementation of stack using an array */
 #include <stdio.h>
 #define MAX 5
 
-int stack[MAX], top = -1;
+int top = -1;                       /* top = -1 means stack is empty */
 
-void push(int x) {
-    if (top == MAX - 1) { printf("Stack Overflow\n"); return; }
-    stack[++top] = x;
-    printf("%d pushed\n", x);
+void push(int stack[], int value) {
+    if (top == MAX - 1)
+        printf("STACK OVERFLOW\n");
+    else {
+        top++;
+        stack[top] = value;
+    }
 }
 
-void pop() {
-    if (top == -1) { printf("Stack Underflow\n"); return; }
-    printf("%d popped\n", stack[top--]);
+int pop(int stack[]) {
+    int val;
+    if (top == -1) {
+        printf("STACK UNDERFLOW\n");
+        return -1;
+    }
+    val = stack[top];
+    top--;
+    return val;
 }
 
-void peek() {
-    if (top == -1) printf("Stack is empty\n");
-    else printf("Top element: %d\n", stack[top]);
-}
-
-void display() {
+void display(int stack[]) {
     int i;
-    if (top == -1) { printf("Stack is empty\n"); return; }
-    printf("Stack (top to bottom): ");
-    for (i = top; i >= 0; i--) printf("%d ", stack[i]);
-    printf("\n");
+    if (top == -1)
+        printf("STACK IS EMPTY\n");
+    else {
+        printf("Stack elements:\n");
+        for (i = top; i >= 0; i--)
+            printf("%d\n", stack[i]);
+    }
 }
 
 int main() {
-    int ch, x;
+    int stack[MAX], option, value, val;
+
     do {
-        printf("\n1.Push 2.Pop 3.Peek 4.Display 5.Exit\nChoice: ");
-        scanf("%d", &ch);
-        switch (ch) {
-        case 1: printf("Enter value: "); scanf("%d", &x); push(x); break;
-        case 2: pop(); break;
-        case 3: peek(); break;
-        case 4: display(); break;
+        printf("\n1. Push\n2. Pop\n3. Display\n4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &option);
+
+        switch (option) {
+        case 1:
+            printf("Enter the value to push: ");
+            scanf("%d", &value);
+            push(stack, value);
+            break;
+        case 2:
+            val = pop(stack);
+            if (val != -1)
+                printf("Popped element: %d\n", val);
+            break;
+        case 3:
+            display(stack);
+            break;
+        case 4:
+            break;
+        default:
+            printf("Invalid choice\n");
         }
-    } while (ch != 5);
+    } while (option != 4);
+
     return 0;
 }
