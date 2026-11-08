@@ -7,17 +7,23 @@ void quicksort(int a[], int first, int last) {
 
     // Use the middle element as pivot (avoids worst case on sorted input)
     int mid = first + (last - first) / 2;
-    int temp = a[first]; a[first] = a[mid]; a[mid] = temp;
+    int temp = a[first];
+        a[first] = a[mid];
+        a[mid] = temp;
 
     int pivot = first, i = first, j = last;
     while (i < j) {
         while (a[i] <= a[pivot] && i < last) i++;
         while (a[j] > a[pivot]) j--;
         if (i < j) {
-            temp = a[i]; a[i] = a[j]; a[j] = temp;
+            temp = a[i];
+            a[i] = a[j];
+            a[j] = temp;
         }
     }
-    temp = a[pivot]; a[pivot] = a[j]; a[j] = temp;
+    temp = a[pivot]; 
+    a[pivot] = a[j];
+    a[j] = temp;
 
     quicksort(a, first, j - 1);
     quicksort(a, j + 1, last);
@@ -43,7 +49,8 @@ int main(void) {
     quicksort(number, 0, count - 1);
 
     printf("Sorted elements:");
-    for (int i = 0; i < count; i++) printf(" %d", number[i]);
-    printf("\n");
+    for (int i = 0; i < count; i++)
+        printf(" %d", number[i]);
+        printf("\n");
     return 0;
 }
