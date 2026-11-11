@@ -1,88 +1,73 @@
-/* Experiment 1: Polynomial addition using arrays of structures */
 #include <stdio.h>
-#define MAX 20
-
 struct poly {
-    int coeff;
-    int expo;
+    int coef; // Coefficient of the term
+    int expo; // Exponent of the term
 };
 
-/* Step 4: read a polynomial (terms in descending order of exponent) */
-void readPolynomial(struct poly p[], int n) {
-    int i;
-    for (i = 0; i < n; i++) {
-        printf("Enter coefficient and exponent of term %d: ", i + 1);
-        scanf("%d %d", &p[i].coeff, &p[i].expo);
+int main() {
+    // Declare arrays to store two input polynomials and the resulting polynomial
+    struct poly poly1[20], poly2[20], polyresult[40];
+    int i, j, k, n1, n2;
+     // Step 1: Read the number of terms for both polynomials
+    printf("Enter the number of terms do you want in poly 1 and 2: ");
+    scanf("%d%d", &n1, &n2);
+       // Step 2: Read the first polynomial in descending order of exponents
+    printf("Enter the polynomial 1 in descending order (coef expo):\n");
+    for(i = 0; i < n1; i++) {
+        scanf("%d%d", &poly1[i].coef, &poly1[i].expo);
     }
-}
-
-/* Step 5: add two polynomials */
-void addPolynomials(struct poly poly1[], int n1, struct poly poly2[], int n2,
-                    struct poly polyResult[], int *nResult) {
-    int i = 0, j = 0, k = 0;
-
-    while (i < n1 && j < n2) {
-        if (poly1[i].expo == poly2[j].expo) {
-            polyResult[k].coeff = poly1[i].coeff + poly2[j].coeff;
-            polyResult[k].expo = poly1[i].expo;
-            i++; j++; k++;
+       // Step 3: Read the second polynomial in descending order of exponents
+    printf("Enter the polynomial 2 in descending order (coef expo):\n");
+    for(j = 0; j < n2; j++) {
+        scanf("%d%d", &poly2[j].coef, &poly2[j].expo);
+    }
+       // Step 4: Merge the two polynomials based on their exponents
+    i = 0, j = 0, k = 0;   
+    while(i < n1 && j < n2) {
+        if(poly1[i].expo == poly2[j].expo) {
+            // Case A: Exponents are equal, add coefficients together
+            polyresult[k].coef = poly1[i].coef + poly2[j].coef;
+            polyresult[k].expo = poly1[i].expo;
+            k++;
+            i++;
+            j++;
         }
-        else if (poly1[i].expo > poly2[j].expo) {
-            polyResult[k] = poly1[i];
-            i++; k++;
+        else if(poly1[i].expo > poly2[j].expo) {
+            // Case B: Polynomial 1 exponent is larger, copy it to the result
+            polyresult[k].coef = poly1[i].coef;
+            polyresult[k].expo = poly1[i].expo;
+            i++;
+            k++;
         }
         else {
-            polyResult[k] = poly2[j];
-            j++; k++;
+            // Case C: Polynomial 2 exponent is larger, copy it to the result
+            polyresult[k].coef = poly2[j].coef;
+            polyresult[k].expo = poly2[j].expo;
+            j++;
+            k++;
         }
     }
-
-    while (i < n1) {            /* remaining terms of poly1 */
-        polyResult[k] = poly1[i];
-        i++; k++;
+        // Step 5: Copy any remaining terms from polynomial 1 (if any)
+    while(i < n1) {
+       polyresult[k] = poly1[i];
+       i++;
+       k++;
     }
-    while (j < n2) {            /* remaining terms of poly2 */
-        polyResult[k] = poly2[j];
-        j++; k++;
+    // Step 6: Copy any remaining terms from polynomial 2 (if any)
+    while(j < n2) {
+       polyresult[k] = poly2[j];
+       j++;
+       k++;
     }
-
-    *nResult = k;
-}
-
-/* Step 6: display polynomial */
-void displayPolynomial(struct poly p[], int n) {
-    int i;
-    for (i = 0; i < n; i++) {
-        printf("%dx^%d", p[i].coeff, p[i].expo);
-        if (i < n - 1)
+    // Step 7: Print the final resultant polynomial
+    printf("Resultant polynomial: ");
+    for(i = 0; i < k; i++) {
+        printf("%dx^%d", polyresult[i].coef, polyresult[i].expo);
+        // Print '+' between terms, but not after the last term
+        if(i < k - 1) {
             printf(" + ");
+        }
     }
-    printf("\n");
-}
-
-/* Step 7: main */
-int main() {
-    struct poly poly1[MAX], poly2[MAX], polyResult[2 * MAX];
-    int n1, n2, nResult;
-
-    printf("Enter number of terms in polynomial 1: ");
-    scanf("%d", &n1);
-    printf("Enter number of terms in polynomial 2: ");
-    scanf("%d", &n2);
-
-    printf("\nPolynomial 1 (descending order of exponents):\n");
-    readPolynomial(poly1, n1);
-    printf("\nPolynomial 2 (descending order of exponents):\n");
-    readPolynomial(poly2, n2);
-
-    printf("\nPolynomial 1 = ");
-    displayPolynomial(poly1, n1);
-    printf("Polynomial 2 = ");
-    displayPolynomial(poly2, n2);
-
-    addPolynomials(poly1, n1, poly2, n2, polyResult, &nResult);
-
-    printf("Sum          = ");
-    displayPolynomial(polyResult, nResult);
+    printf("\n"); 
     return 0;
 }
